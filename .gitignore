@@ -1,0 +1,30 @@
+# Local files
+.DS_Store
+._*
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Private configuration and credentials
+.env
+.env.*
+!.env.example
+wp-config.php
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Runtime data and exports
+*.log
+*.sql
+*.sql.gz
+*.zip
+*.tar
+*.tar.gz
+*.bak
+backups/
+node_modules/

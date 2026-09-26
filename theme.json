@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schemas.wp.org/wp/7.1/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "900px",
+      "wideSize": "960px"
+    },
+    "color": {
+      "defaultPalette": false,
+      "palette": [
+        { "slug": "u5-page", "name": "Page background", "color": "#252525" },
+        { "slug": "u5-panel", "name": "Panel", "color": "#303030" },
+        { "slug": "u5-text", "name": "Text", "color": "#f3f3f3" },
+        { "slug": "u5-muted", "name": "Muted text", "color": "#b7b7b7" },
+        { "slug": "u5-accent", "name": "Accent", "color": "#8ab43f" },
+        { "slug": "u5-link", "name": "Links", "color": "#8ab43f" }
+      ]
+    },
+    "spacing": {
+      "defaultSpacingSizes": false,
+      "spacingSizes": [
+        { "slug": "small", "name": "Small", "size": "0.75rem" },
+        { "slug": "medium", "name": "Medium", "size": "1.5rem" },
+        { "slug": "large", "name": "Large", "size": "2.5rem" }
+      ],
+      "units": [ "px", "rem", "em", "%", "vw", "vh" ]
+    },
+    "typography": {
+      "fluid": true,
+      "fontFamilies": [
+        { "fontFamily": "\"PingFang SC\", \"PingFang TC\", \"Microsoft YaHei\", \"Microsoft JhengHei\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif", "slug": "system", "name": "Site font" },
+        { "fontFamily": "\"PingFang SC\", \"PingFang TC\", \"Microsoft YaHei\", \"Microsoft JhengHei\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif", "slug": "serif", "name": "Legacy heading font" }
+      ],
+      "fontSizes": [
+        { "slug": "small", "name": "Small", "size": "0.875rem" },
+        { "slug": "medium", "name": "Medium", "size": "1rem" },
+        { "slug": "large", "name": "Large", "size": "1.5rem" },
+        { "slug": "x-large", "name": "Extra large", "size": "2.25rem" }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "#252525",
+      "text": "#f3f3f3"
+    },
+    "typography": {
+      "fontFamily": "\"PingFang SC\", \"PingFang TC\", \"Microsoft YaHei\", \"Microsoft JhengHei\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "fontSize": "1rem",
+      "lineHeight": "1.65"
+    },
+    "elements": {
+      "link": { "color": { "text": "#8ab43f" } },
+      "button": {
+        "color": { "background": "#8ab43f", "text": "#111111" },
+        "border": { "radius": "0.3rem" }
+      }
+    }
+  }
+}

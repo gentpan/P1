@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex, nofollow">
+	<title>Toast 样式预览 · P1</title>
+	<link rel="stylesheet" href="style.css">
+	<style>
+		body { min-height: 100vh; background: var(--p1-page); color: var(--p1-text); }
+		.demo-shell { width: min(1100px, calc(100% - 2rem)); margin: 0 auto; padding: clamp(2rem, 5vw, 4rem) 0; }
+		.demo-back { color: var(--p1-accent); font-size: .85rem; text-decoration: none; }
+		.demo-back:hover { text-decoration: underline; }
+		.demo-heading { margin: 1.5rem 0 2.25rem; }
+		.demo-heading h1 { margin: 0 0 .5rem; font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1.2; }
+		.demo-heading p, .demo-note { max-width: 44rem; margin: 0; color: var(--p1-muted); font-size: .9rem; }
+		.demo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+		.demo-card { min-width: 0; padding: 1.3rem; border: 1px solid var(--p1-border); border-radius: .8rem; background: var(--p1-panel); }
+		.demo-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; margin-bottom: .35rem; }
+		.demo-card h2 { margin: 0; font-size: 1.1rem; }
+		.demo-card-head span { color: var(--p1-accent); font-size: .73rem; white-space: nowrap; }
+		.demo-card > p { min-height: 3.5rem; margin: 0 0 1rem; color: var(--p1-muted); font-size: .82rem; line-height: 1.6; }
+		.demo-preview { display: grid; place-items: center; min-height: 8.5rem; margin-bottom: 1rem; padding: .8rem; border-radius: .55rem; background: color-mix(in srgb, var(--p1-page) 65%, var(--p1-panel)); }
+		.demo-preview .p1-toast-stack { position: static; width: 100%; max-width: 21rem; transform: none; justify-items: center; pointer-events: auto; }
+		.demo-preview .p1-toast { animation: none; }
+		.demo-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+		.demo-button { min-height: 2.35rem; padding: .45rem .8rem; border: 1px solid var(--p1-border); border-radius: .4rem; background: var(--p1-panel-raised); color: var(--p1-text); cursor: pointer; font: inherit; font-size: .82rem; }
+		.demo-button:hover, .demo-button:focus-visible { border-color: var(--p1-accent); color: var(--p1-accent); }
+		.demo-button.is-selected { border-color: var(--p1-accent); background: color-mix(in srgb, var(--p1-accent) 13%, var(--p1-panel)); color: var(--p1-accent); }
+		.demo-scenarios { margin-top: 2rem; padding: 1.35rem; border: 1px solid var(--p1-border); border-radius: .8rem; background: var(--p1-panel); }
+		.demo-scenarios h2 { margin: 0 0 .35rem; font-size: 1.1rem; }
+		.demo-scenarios p { margin: 0 0 1.2rem; color: var(--p1-muted); font-size: .82rem; }
+		.demo-note { margin-top: 1.5rem; }
+		@media (max-width: 850px) { .demo-grid { grid-template-columns: 1fr; } .demo-card > p { min-height: 0; } }
+	</style>
+</head>
+<body>
+	<main class="demo-shell">
+		<a class="demo-back" href="/">← 返回首页</a>
+		<header class="demo-heading">
+			<h1>中上部提示 · 样式预览</h1>
+			<p>三种风格使用同一套消息与交互。点击“中上部预览”切换风格，再点击下方的场景按钮查看实际出现和消失的效果。</p>
+		</header>
+		<section class="demo-grid" aria-label="Toast 风格">
+			<article class="demo-card">
+				<div class="demo-card-head"><h2>01 强调线</h2><span>对比方案</span></div>
+				<p>左侧细色条提示状态，层次清楚，和 P1 的深色页面比较协调。</p>
+				<div class="demo-preview"><div class="p1-toast-stack" data-style="rail"><div class="p1-toast p1-toast--comment"><span class="p1-toast__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l1.8-3.6A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8.5 11.5h7"/></svg></span><span class="p1-toast__content"><strong>评论成功</strong><small>感谢你留下评论</small></span></div></div></div>
+				<button class="demo-button" type="button" data-style="rail" aria-pressed="false">中上部预览</button>
+			</article>
+			<article class="demo-card">
+				<div class="demo-card-head"><h2>02 简洁单行</h2><span>当前使用</span></div>
+				<p>保留方案二的紧凑感，改为小圆角矩形；只有图标和一行结果，不加强调线或说明文字。</p>
+				<div class="demo-preview"><div class="p1-toast-stack" data-style="capsule"><div class="p1-toast p1-toast--copy"><span class="p1-toast__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></span><span class="p1-toast__content"><strong>复制成功</strong></span></div></div></div>
+				<button class="demo-button is-selected" type="button" data-style="capsule" aria-pressed="true">中上部预览</button>
+			</article>
+			<article class="demo-card">
+				<div class="demo-card-head"><h2>03 细描边</h2><span>柔和</span></div>
+				<p>纯黑背景配细致描边，保留轻微的主题色提示，不使用半透明效果。</p>
+				<div class="demo-preview"><div class="p1-toast-stack" data-style="glass"><div class="p1-toast p1-toast--like"><span class="p1-toast__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 8.6c0 4.2-8.8 10.2-8.8 10.2S3.2 12.8 3.2 8.6a4.5 4.5 0 0 1 8.8-1.2 4.5 4.5 0 0 1 8.8 1.2Z"/></svg></span><span class="p1-toast__content"><strong>点赞成功</strong><small>撒花成功，感谢你的支持</small></span></div></div></div>
+				<button class="demo-button" type="button" data-style="glass" aria-pressed="false">中上部预览</button>
+			</article>
+		</section>
+		<section class="demo-scenarios" aria-labelledby="demo-scenarios-title">
+			<h2 id="demo-scenarios-title">触发场景</h2>
+			<p>消息会出现在页面中上部。正式站点已接入评论、复制和点赞反馈。</p>
+			<div class="demo-actions">
+				<button class="demo-button" type="button" data-type="comment" data-title="评论成功" data-detail="感谢你留下评论">评论成功</button>
+				<button class="demo-button" type="button" data-type="copy" data-title="复制成功" data-detail="链接已复制到剪贴板">复制成功</button>
+				<button class="demo-button" type="button" data-type="celebrate" data-title="撒花成功" data-detail="把好心情送给你">撒花成功</button>
+				<button class="demo-button" type="button" data-type="like" data-title="点赞成功" data-detail="感谢你的支持">点赞成功</button>
+			</div>
+		</section>
+		<p class="demo-note">预览页只展示样式，不会真的提交评论、复制内容或修改点赞数。正式页面目前使用“简洁单行”风格。</p>
+	</main>
+	<div id="p1-toast-stack" class="p1-toast-stack" data-style="capsule" aria-live="polite" aria-atomic="false"></div>
+	<script src="assets/js/toast.js" defer></script>
+	<script defer>
+		document.querySelectorAll('.demo-card [data-style]').forEach((button) => {
+			if (button.tagName !== 'BUTTON') return;
+			button.addEventListener('click', () => {
+				const stack = document.getElementById('p1-toast-stack');
+				stack.dataset.style = button.dataset.style;
+				document.querySelectorAll('.demo-card button[data-style]').forEach((choice) => {
+					const selected = choice === button;
+					choice.classList.toggle('is-selected', selected);
+					choice.setAttribute('aria-pressed', String(selected));
+				});
+				window.p1Toast?.show('样式已切换', { type: 'success', detail: button.closest('.demo-card').querySelector('h2').textContent });
+			});
+		});
+		document.querySelectorAll('.demo-scenarios button[data-type]').forEach((button) => {
+			button.addEventListener('click', () => window.p1Toast?.show(button.dataset.title, { type: button.dataset.type, detail: button.dataset.detail }));
+		});
+	</script>
+</body>
+</html>
