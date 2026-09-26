@@ -43,7 +43,6 @@ $p1_footer_x_url = p1_sanitize_external_url( p1_setting( 'footer_x_url' ) );
 	?>
 	<?php if ( ! is_home() && ! is_front_page() ) : ?>
 	<nav class="p1-quickbar<?php echo is_singular( 'post' ) ? ' p1-quickbar--article' : ''; ?>" data-placement="attached" aria-label="<?php echo esc_attr( p1_theme_text( 'quickbar_label', '快捷工具栏' ) ); ?>">
-		<?php if ( ! is_singular( 'post' ) ) p1_render_random_post_button(); ?>
 		<div class="quickbar-scroll-controls">
 		<a href="#header" aria-label="<?php echo esc_attr( p1_theme_text( 'quickbar_top', '回到顶部' ) ); ?>" title="<?php echo esc_attr( p1_theme_text( 'quickbar_top', '回到顶部' ) ); ?>"><svg aria-hidden="true" focusable="false"><use href="<?php echo esc_url( $p1_quickbar_sprite . '#arrow-up' ); ?>"></use></svg></a>
 		<a href="#p1-page-end" aria-label="<?php echo esc_attr( p1_theme_text( 'quickbar_bottom', '前往底部' ) ); ?>" title="<?php echo esc_attr( p1_theme_text( 'quickbar_bottom', '前往底部' ) ); ?>"><svg aria-hidden="true" focusable="false"><use href="<?php echo esc_url( $p1_quickbar_sprite . '#arrow-down' ); ?>"></use></svg></a>

@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php endif; ?>
 				</div>
 				<div class="site-header-tools">
-					<?php if ( is_home() || is_front_page() || is_singular( 'post' ) ) { p1_render_random_post_button( true ); } ?>
+					<?php p1_render_random_post_button( true ); ?>
 					<?php p1_render_header_menu(); ?>
 				</div>
 				<?php if ( $p1_header_note ) : ?>

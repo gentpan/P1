@@ -438,19 +438,8 @@ th, td {
 .entry.entry--reading :is(h2, h3) { scroll-margin-block-start: var(--p1-toc-scroll-offset, 6rem); }
 
 .p1-quickbar {
-	--p1-quickbar-gap: 0.625rem;
-	position: fixed;
-	inset-block-start: var(--p1-side-tools-top);
-	inset-inline-end: calc(50% + var(--p1-content-width) / 2 + var(--p1-quickbar-gap));
-	z-index: 40;
-	display: flex;
-	flex-direction: column;
-	gap: 0.35rem;
-	width: 2.75rem;
-}
-
-.p1-quickbar[data-placement="attached"] {
-	--p1-quickbar-gap: 0px;
+	position: static;
+	width: auto;
 }
 
 .p1-quickbar a {
@@ -500,12 +489,8 @@ th, td {
 }
 
 .quickbar-scroll-controls { display: contents; }
-.p1-quickbar--article {
-	position: static;
-	width: auto;
-}
 .p1-quickbar--article .quickbar-post-divider { display: none; }
-.p1-quickbar--article .quickbar-scroll-controls {
+.p1-quickbar .quickbar-scroll-controls {
 	position: fixed;
 	inset-inline-end: max(1rem, env(safe-area-inset-right));
 	inset-block-end: max(1rem, env(safe-area-inset-bottom));
@@ -515,7 +500,7 @@ th, td {
 	gap: .25rem;
 }
 @media (width > 68rem) {
-	.p1-quickbar--article .quickbar-scroll-controls {
+	.p1-quickbar .quickbar-scroll-controls {
 		inset-inline-start: calc(50% + var(--p1-content-width) / 2);
 		inset-inline-end: auto;
 		inset-block-start: var(--p1-side-tools-top);
@@ -523,7 +508,7 @@ th, td {
 	}
 }
 @media (min-width: 84rem) {
-	.p1-quickbar--article .quickbar-scroll-controls.is-below-toc {
+	.p1-quickbar .quickbar-scroll-controls.is-below-toc {
 		flex-direction: row;
 		inset-inline-start: calc(50% + var(--p1-content-width) / 2 + 1rem);
 		inset-inline-end: auto;
@@ -533,24 +518,6 @@ th, td {
 }
 
 @media (max-width: 68rem) {
-	.p1-quickbar {
-		inset-block-start: auto;
-		inset-block-end: 0.75rem;
-		inset-inline-start: 50%;
-		inset-inline-end: auto;
-		flex-direction: row;
-		align-items: center;
-		width: max-content;
-		max-width: calc(100vw - 1rem);
-		transform: translateX(-50%);
-	}
-	.p1-quickbar--article { transform: none; }
-	.quickbar-post-divider {
-		width: 1px;
-		height: 1.5rem;
-		margin: 0 .15rem;
-	}
-
 	body:has(.p1-quickbar),
 	body:has(.p1-back-to-top) {
 		padding-block-end: 4rem;
