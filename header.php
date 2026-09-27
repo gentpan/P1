@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<?php wp_head(); ?>
 </head>
-<body <?php body_class(); ?> data-color-scheme="<?php echo esc_attr( u5_get_color_scheme() ); ?>" data-heading-font="<?php echo esc_attr( p1_sanitize_font_choice( p1_setting( 'heading_font' ) ) ); ?>" data-body-font="<?php echo esc_attr( p1_sanitize_font_choice( p1_setting( 'body_font' ) ) ); ?>">
+<body <?php body_class(); ?> data-p1-runtime="<?php echo esc_attr( p1_runtime_config() ); ?>" data-color-scheme="<?php echo esc_attr( u5_get_color_scheme() ); ?>" data-heading-font="<?php echo esc_attr( p1_sanitize_font_choice( p1_setting( 'heading_font' ) ) ); ?>" data-body-font="<?php echo esc_attr( p1_sanitize_font_choice( p1_setting( 'body_font' ) ) ); ?>">
 <?php wp_body_open(); ?>
 <a class="skip-link screen-reader-text" href="#main"><?php echo esc_html( p1_theme_text( 'skip_to_content', __( 'Skip to content', 'u5' ) ) ); ?></a>
 <div class="site">

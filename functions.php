@@ -562,21 +562,123 @@ function u5_enqueue_assets(): void {
 
 	// Comment reply and the theme's delegated listeners must survive PJAX transitions.
 	wp_enqueue_script( 'comment-reply' );
-	wp_localize_script( 'p1-app', 'p1ViewsConfig', array( 'ajaxUrl' => admin_url( 'admin-ajax.php' ) ) );
-	wp_localize_script( 'p1-app', 'p1LikesConfig', array(
-		'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-		'nonce' => wp_create_nonce( 'p1_toggle_post_like' ),
-		'likeLabel' => p1_theme_text( 'like_action', __( 'Like this post', 'u5' ) ),
-		'likedLabel' => p1_theme_text( 'liked_action', '已点赞' ),
-		'errorLabel' => p1_theme_text( 'like_error', __( 'Could not save your like. Please try again.', 'u5' ) ),
-	) );
-	wp_add_inline_script( 'p1-app', 'window.p1PjaxConfig = ' . wp_json_encode( array(
-		'homeUrl' => home_url( '/' ),
-		'highlightUrl' => get_theme_file_uri( 'assets/js/highlight.min.js' ),
-		'litezoomUrl' => 'https://litezoom.dev/litezoom.min.js',
-	) ) . ';', 'before' );
 }
 add_action( 'wp_enqueue_scripts', 'u5_enqueue_assets' );
+
+/** Dynamic values remain in the HTML while all executable code lives in app.js. */
+function p1_runtime_config(): string {
+	return (string) wp_json_encode(
+		array(
+			'views' => array( 'ajaxUrl' => admin_url( 'admin-ajax.php' ) ),
+			'likes' => array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce' => wp_create_nonce( 'p1_toggle_post_like' ),
+				'likeLabel' => p1_theme_text( 'like_action', __( 'Like this post', 'u5' ) ),
+				'likedLabel' => p1_theme_text( 'liked_action', '已点赞' ),
+				'errorLabel' => p1_theme_text( 'like_error', __( 'Could not save your like. Please try again.', 'u5' ) ),
+			),
+			'pjax' => array(
+				'homeUrl' => home_url( '/' ),
+				'highlightUrl' => get_theme_file_uri( 'assets/js/highlight.min.js' ),
+				'litezoomUrl' => 'https://litezoom.dev/litezoom.min.js',
+			),
+		),
+		JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+	);
+}
+
+/** Resolve stylesheet-relative URLs when the stylesheet moves into the uploads cache. */
+function p1_bundle_css_urls( string $css, string $source_url ): string {
+	return preg_replace_callback(
+		'~url\(\s*(?:"([^"]*)"|\'([^\']*)\'|([^)]*))\s*\)~i',
+		static function ( array $match ) use ( $source_url ): string {
+			$url = trim( ( $match[1] ?? '' ) ?: ( ( $match[2] ?? '' ) ?: ( $match[3] ?? '' ) ) );
+			if ( '' === $url || preg_match( '~^(?:[a-z][a-z0-9+.-]*:|/|#)~i', $url ) ) {
+				return $match[0];
+			}
+			return 'url(' . wp_json_encode( WP_Http::make_absolute_url( $url, $source_url ), JSON_UNESCAPED_SLASHES ) . ')';
+		},
+		$css
+	) ?? $css;
+}
+
+/** Merge generated core CSS and the theme stylesheet without freezing site settings. */
+function p1_bundle_frontend_styles( string $html ): string {
+	if ( is_admin() || is_customize_preview() || is_feed() || wp_doing_ajax() ) {
+		return $html;
+	}
+	if ( ! preg_match( '~<link\b[^>]*\bid=["\']u5-style-css["\'][^>]*>~i', $html, $theme_link ) ) {
+		return $html;
+	}
+	$theme_file = get_theme_file_path( 'style.css' );
+	$theme_css = is_readable( $theme_file ) ? file_get_contents( $theme_file ) : false;
+	if ( false === $theme_css ) {
+		return $html;
+	}
+	$before = array();
+	$after = array();
+	$remove = array();
+	$allowed = array( 'wp-block-library-inline-css', 'global-styles-inline-css', 'wp-img-auto-sizes-contain-inline-css', 'u5-style-inline-css' );
+	if ( preg_match_all( '~<style\b[^>]*\bid=["\']([^"\']+)["\'][^>]*>(.*?)</style>~is', $html, $styles, PREG_SET_ORDER ) ) {
+		foreach ( $styles as $style ) {
+			if ( ! in_array( $style[1], $allowed, true ) ) {
+				continue;
+			}
+			$css = preg_replace( '~/\*[#@]\s*source(?:URL|MappingURL)=[\s\S]*?\*/~', '', $style[2] ) ?? $style[2];
+			if ( 'wp-block-library-inline-css' === $style[1] ) {
+				$css = p1_bundle_css_urls( $css, includes_url( 'css/dist/block-library/common.min.css' ) );
+			}
+			if ( 'u5-style-inline-css' === $style[1] ) {
+				$after[] = $css;
+			} else {
+				$before[] = $css;
+			}
+			$remove[] = $style[0];
+		}
+	}
+	if ( ! $remove ) {
+		return $html;
+	}
+	$css = implode( "\n", $before ) . "\n" . p1_bundle_css_urls( $theme_css, get_theme_file_uri( 'style.css' ) ) . "\n" . implode( "\n", $after );
+	$uploads = wp_upload_dir( null, false );
+	if ( $uploads['error'] ) {
+		return $html;
+	}
+	$directory = $uploads['basedir'] . '/p1-assets';
+	$name = 'style-' . hash( 'sha256', $css ) . '.css';
+	$file = $directory . '/' . $name;
+	if ( ! is_readable( $file ) ) {
+		if ( ! wp_mkdir_p( $directory ) ) {
+			return $html;
+		}
+		if ( ! is_writable( $directory ) ) {
+			return $html;
+		}
+		$temp = tempnam( $directory, 'p1-css-' );
+		if ( ! $temp ) {
+			return $html;
+		}
+		$written = file_put_contents( $temp, $css, LOCK_EX );
+		if ( false === $written || $written !== strlen( $css ) || ! rename( $temp, $file ) ) {
+			wp_delete_file( $temp );
+			return $html;
+		}
+		chmod( $file, 0644 );
+	}
+	$processor = new WP_HTML_Tag_Processor( $theme_link[0] );
+	$processor->next_tag( 'LINK' );
+	$processor->set_attribute( 'href', $uploads['baseurl'] . '/p1-assets/' . $name );
+	return str_replace( $theme_link[0], $processor->get_updated_html(), str_replace( $remove, '', $html ) );
+}
+add_filter( 'wp_template_enhancement_output_buffer', 'p1_bundle_frontend_styles', PHP_INT_MAX );
+
+/** WordPress versions before template enhancement buffering still support the bundle. */
+function p1_start_legacy_style_bundle(): void {
+	if ( ! function_exists( 'wp_start_template_enhancement_output_buffer' ) && ! is_feed() && ! is_customize_preview() && ! wp_doing_ajax() ) {
+		ob_start( 'p1_bundle_frontend_styles' );
+	}
+}
+add_action( 'template_redirect', 'p1_start_legacy_style_bundle', 999 );
 
 function p1_font_resource_hints( array $urls, string $relation_type ): array {
 	if ( 'preconnect' === $relation_type && p1_selected_remote_fonts() ) {

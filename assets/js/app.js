@@ -1,3 +1,13 @@
+// Read per-page values without separate inline JavaScript resources.
+const p1RuntimeConfig = (() => {
+	try {
+		if (document.body?.dataset.p1Runtime) return JSON.parse(document.body.dataset.p1Runtime);
+		// Keep previously cached pages functional during an asset rollout.
+		return { views: window.p1ViewsConfig, likes: window.p1LikesConfig, pjax: window.p1PjaxConfig };
+	}
+	catch { return {}; }
+})();
+
 // Public IP lookup runs in the visitor's browser, independently of the site's CDN.
 (() => {
 	'use strict';
@@ -1217,7 +1227,7 @@
 (function () {
 	'use strict';
 
-	const config = window.p1ViewsConfig;
+	const config = p1RuntimeConfig.views;
 	if (!config) {
 		return;
 	}
@@ -1292,7 +1302,7 @@
 (function () {
 	'use strict';
 
-	const config = window.p1LikesConfig;
+	const config = p1RuntimeConfig.likes;
 	if (!config) {
 		return;
 	}
@@ -1458,7 +1468,7 @@
 (() => {
 	'use strict';
 
-	const config = window.p1PjaxConfig;
+	const config = p1RuntimeConfig.pjax;
 	const indicator = document.getElementById('p1-page-loading');
 	if (!config || !indicator || !window.fetch || !window.history?.pushState) return;
 
@@ -1977,7 +1987,7 @@
 // Footer visitor statistics (ShanYing method, adapted for P1 PJAX).
 (() => {
 	'use strict';
-	const endpoint = window.p1ViewsConfig?.ajaxUrl;
+	const endpoint = p1RuntimeConfig.views?.ajaxUrl;
 	if (!endpoint) return;
 	const uuid = () => {
 		if (window.crypto?.randomUUID) return window.crypto.randomUUID();
