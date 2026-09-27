@@ -4688,3 +4688,111 @@ body[data-color-scheme="minimal"] .p1-c-comment-device-icon .p1-c-device-apple-d
 .site-header-tools .header-action-button svg { width: 22px; height: 22px; }
 .site-header-tools .header-menu .toggle { transform: scale(.55, .65); }
 .p1-back-to-top[hidden] { display: none; }
+
+/* Complete responsive layouts: retain desktop layouts while fitting narrow screens. */
+@media (max-width: 52rem) {
+	.primary-navigation { flex-direction: column; }
+	.primary-navigation > ul { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); width: 100%; min-height: 44px; flex: none; }
+	.primary-navigation > ul > li { width: auto; min-width: 0; }
+	.primary-navigation > ul > li > a { min-height: 44px; }
+	.navigation-tools { flex: none; width: 100%; min-height: 0; padding: .4rem .75rem; border-block-start: 1px solid var(--p1-menu-divider-dark); }
+	.navigation-search-form { flex: 1; width: 100%; min-width: 0; height: 44px; }
+	.navigation-search-input { font-size: 16px; }
+	.navigation-search-submit { width: 44px; }
+	.p1-menu-dialog { max-height: calc(100dvh - 2rem); overscroll-behavior: contain; }
+	.p1-archive-section-heading { flex-wrap: wrap; }
+}
+
+/* Keep emoji at the toolbar's 21px size with a 16px mobile input font. */
+@font-face {
+	font-family: "P1 Mobile Comment Emoji";
+	src: local("Apple Color Emoji"), local("Segoe UI Emoji"), local("Noto Color Emoji");
+	font-style: normal;
+	font-weight: 400;
+	size-adjust: 131.25%;
+	unicode-range: U+200D, U+2300-23FF, U+2600-27BF, U+2B00-2BFF, U+FE0F, U+1F000-1FAFF;
+}
+
+@media (max-width: 36rem) {
+	body { min-width: 0; background-attachment: scroll; }
+	body.single-post .site-content { --p1-single-inset: 1rem; }
+	.site-main, .p1-page-header, .p1-page-header-meta { min-width: 0; }
+	.site-header-tools .header-action-button, .site-header-tools .header-menu { flex-basis: 44px; width: 44px; min-height: 44px; }
+	.primary-navigation > ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+	.primary-navigation > ul > li > a { font-size: 14px; }
+	.p1-page-header { gap: .5rem 1rem; padding-block-end: 1rem; }
+	.p1-page-header-meta { width: 100%; font-size: 12px; gap: .3rem .75rem; }
+	.p1-results-search .search-form, .p1-results-empty .search-form { min-width: 0; flex-wrap: wrap; }
+	.p1-results :is(.search-field, .search-submit) { min-height: 44px; font-size: 16px; }
+	.p1-result-summary, .post-card-summary { font-size: 15px; }
+	.post-card-meta, .p1-result .post-card-meta { font-size: 12px; row-gap: .5rem; }
+	.post-card-meta-left { gap: .35rem .65rem; }
+	.post-card-meta-actions :is(.post-card-comments, .p1-like-button) { min-height: 36px; }
+
+	.p1-feed-heading { grid-template-columns: 32px minmax(0, 1fr); gap: .25rem .6rem; align-items: start; }
+	.p1-feed-favicon { grid-column: 1; grid-row: 1 / 3; width: 32px; height: 32px; }
+	.p1-feed-meta { grid-column: 2; grid-row: 1; min-width: 0; flex-wrap: wrap; gap: .2rem .5rem; font-size: 12px; white-space: normal; }
+	.p1-feed-source { max-width: 100%; }
+	.p1-feed-entry h2 { grid-column: 2; grid-row: 2; font-size: 15px; }
+	.p1-feed-entry h2 a { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; white-space: normal; overflow-wrap: anywhere; }
+	.p1-feed-summary { margin-inline-start: 0; font-size: 14px; }
+	.p1-feed-more { min-height: 44px; }
+
+	.p1-friend-info { flex-direction: column; align-items: stretch; gap: .15rem; }
+	.p1-friend-name { max-width: 100%; font-size: 15px; }
+	.p1-friend-description { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; white-space: normal; overflow-wrap: anywhere; font-size: 13px; }
+	.p1-links-directory a.p1-friend-rss { width: 36px; height: 44px; }
+
+	.p1-notes-introduction { gap: .75rem; }
+	.p1-notes-heatmap .p1-heatmap-grid { min-width: 0; width: 100%; gap: 2px; }
+	.p1-archive-heatmap .p1-heatmap-grid { min-width: 0; gap: 2px; }
+	.p1-note-board .p1-note-entry:nth-child(n) { --note-tilt: 0deg; }
+	.p1-note-board .p1-note-card-open .p1-note-text { font-size: 16px; }
+	.p1-note-dock { inset-inline-start: calc((100% - 4rem) / 2); max-width: calc(100% - 5rem); gap: .25rem; padding: .3rem .5rem; }
+	.p1-note-dock strong { padding-inline: .1rem .35rem; }
+	.p1-note-dock > span { padding-inline: .35rem .1rem; }
+	.p1-note-dock :is(button, a) { width: 44px; height: 44px; flex: none; }
+	body:has(.p1-notes-page) .quickbar-scroll-controls { inset-inline-end: max(.5rem, env(safe-area-inset-right)); }
+	body:has(.p1-notes-page) { padding-block-end: calc(5rem + env(safe-area-inset-bottom)); }
+	.p1-note-editor, .p1-note-detail { max-width: calc(100% - 1.5rem); max-height: calc(100dvh - 1.5rem); }
+	.p1-note-editor .p1-note-dialog-close, .p1-note-detail header button { width: 44px; height: 44px; flex: none; }
+	.p1-note-suggestions button { min-height: 32px; }
+	.p1-note-discard button { min-height: 44px; }
+
+	.single-post-copyright { font-size: 13px; }
+	.single-post-copyright-details dt, .single-post-copyright-source > span:first-child { font-size: 12px; }
+	.single-post-copyright-url { font-size: 12px; }
+	.single-post-copyright .p1-source-copy { width: 44px; height: 44px; }
+	.p1-conversations { --p1-c-control: 44px; }
+	.p1-c-heading { flex-wrap: wrap; }
+	.p1-c-identity { min-width: 0; }
+	.p1-c-controls { display: flex; align-items: center; margin-inline-start: auto; }
+	.p1-c-actions { position: static; opacity: 1; visibility: visible; }
+	.p1-c-actions a { width: 36px; height: 36px; }
+	.p1-c-body:is(:hover, :focus-within) .p1-c-number { opacity: 1 !important; }
+	.p1-c-text { font-size: 15px; }
+	.p1-c-list .children .p1-c-text { font-size: 14px; }
+	.p1-conversations .comment-form-comment textarea { min-height: 170px; padding: 14px 16px; font-size: 16px; font-family: "P1 Mobile Comment Emoji", var(--p1-font-body); }
+	.p1-conversations .comment-form input:not([type="hidden"], [type="checkbox"]) { font-size: 16px; }
+	.p1-conversations .comment-form { grid-template-columns: minmax(0, 1fr); }
+	.p1-conversations :is(.comment-form-author, .comment-form-email, .comment-form-url, .form-submit) { grid-column: 1; }
+	.p1-conversations .form-submit { grid-row: 5; }
+	.p1-conversations .comment-notes { grid-row: 6; }
+	.p1-conversations .p1-comment-error { grid-row: 7; }
+	.p1-conversations .comment-form.is-remembered:not(.is-editing-profile) .form-submit { grid-row: 2; }
+	.p1-conversations .comment-form.is-remembered:not(.is-editing-profile) .comment-notes { grid-row: 3; }
+	.p1-conversations .comment-form.is-remembered:not(.is-editing-profile) .p1-comment-error { grid-row: 4; }
+	.p1-conversations .p1-comment-submit, .p1-conversations .p1-comment-submit:is(:hover, :focus-visible) { display: flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; }
+	.p1-comment-submit > svg, .p1-c-submit-label { position: static; transform: none; }
+	.p1-c-submit-label { opacity: 1; font-size: 14px; }
+	.p1-c-emoji-options button { flex-basis: 36px; width: 36px; height: 36px; }
+	.site:has(:is(input, textarea, [contenteditable="true"]):focus) ~ .p1-quickbar .quickbar-scroll-controls { visibility: hidden; pointer-events: none; }
+	.p1-footer-stats { font-size: 12px; }
+}
+
+@media (max-width: 23rem) {
+	.post-card-meta { grid-template-columns: minmax(0, 1fr); }
+	.post-card-meta-actions { justify-self: end; }
+	.p1-note-dock strong { display: none; }
+}
+html:is(.p1-modal-open, .p1-note-modal-open) :is(.p1-quickbar, .p1-back-to-top) { visibility: hidden; pointer-events: none; }
