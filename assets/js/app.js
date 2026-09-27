@@ -2166,6 +2166,35 @@
 		anchor.className = 'p1-nav-scroll-anchor';
 		anchor.setAttribute('aria-hidden', 'true');
 		nav.before(anchor);
+		const searchToggle = nav.querySelector('.navigation-search-toggle');
+		const searchInput = nav.querySelector('.navigation-search-input');
+		const mobileSearch = window.matchMedia('(max-width: 52rem)');
+		function closeSearch(restoreFocus = false) {
+			nav.classList.remove('is-search-open');
+			searchToggle?.setAttribute('aria-expanded', 'false');
+			if (restoreFocus) searchToggle?.focus({ preventScroll: true });
+		}
+		if (searchToggle && searchInput) {
+			nav.setAttribute('data-mobile-search', '');
+			searchToggle.addEventListener('click', () => {
+				if (nav.classList.contains('is-search-open')) closeSearch(true);
+				else {
+					nav.classList.add('is-search-open');
+					searchToggle.setAttribute('aria-expanded', 'true');
+					show();
+					searchInput.focus({ preventScroll: true });
+				}
+			}, { signal: life.signal });
+			nav.addEventListener('keydown', (event) => {
+				if (event.key === 'Escape' && nav.classList.contains('is-search-open')) {
+					event.preventDefault(); closeSearch(true);
+				}
+			}, { signal: life.signal });
+			document.addEventListener('click', (event) => {
+				if (!nav.contains(event.target)) closeSearch();
+			}, { signal: life.signal });
+			mobileSearch.addEventListener('change', () => closeSearch(), { signal: life.signal });
+		}
 		let lastY = Math.max(0, window.scrollY);
 		let direction = 0;
 		let distance = 0;
@@ -2207,6 +2236,8 @@
 			life.abort();
 			cancelAnimationFrame(frame);
 			anchor.remove();
+			closeSearch();
+			nav.removeAttribute('data-mobile-search');
 			nav.classList.remove('is-scroll-hidden');
 			nav.style.removeProperty('--p1-nav-top');
 			cleanup = () => {};

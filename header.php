@@ -156,7 +156,8 @@ $p1_heatmap = p1_post_publication_heatmap();
 			?>
 			<div class="navigation-tools">
 				<?php $p1_nav_icon_sprite = get_theme_file_uri( 'assets/icons/fontawesome-used.svg' ); ?>
-					<form role="search" method="get" class="navigation-search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+					<button class="navigation-search-toggle" type="button" aria-expanded="false" aria-controls="p1-navigation-search-form" aria-label="<?php echo esc_attr( p1_theme_text( 'search_submit', __( 'Search', 'u5' ) ) ); ?>"><svg aria-hidden="true" focusable="false"><use href="<?php echo esc_url( $p1_nav_icon_sprite . '#magnifying-glass' ); ?>"></use></svg></button>
+					<form id="p1-navigation-search-form" role="search" method="get" class="navigation-search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 						<label class="screen-reader-text" for="p1-navigation-search"><?php echo esc_html( p1_theme_text( 'search_label', __( 'Search for:', 'u5' ) ) ); ?></label>
 						<input id="p1-navigation-search" class="navigation-search-input" type="search" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php echo esc_attr( p1_theme_text( 'search_placeholder', __( 'Search …', 'u5' ) ) ); ?>">
 						<button class="navigation-search-submit" type="submit" aria-label="<?php echo esc_attr( p1_theme_text( 'search_submit', __( 'Search', 'u5' ) ) ); ?>"><svg aria-hidden="true" focusable="false"><use href="<?php echo esc_url( $p1_nav_icon_sprite . '#magnifying-glass' ); ?>"></use></svg></button>
