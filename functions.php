@@ -587,7 +587,7 @@ function p1_runtime_config(): string {
 	);
 }
 
-/** Resolve stylesheet-relative URLs when the stylesheet moves into the uploads cache. */
+/** Resolve stylesheet-relative URLs when the stylesheet moves into the theme's CSS directory. */
 function p1_bundle_css_urls( string $css, string $source_url ): string {
 	return preg_replace_callback(
 		'~url\(\s*(?:"([^"]*)"|\'([^\']*)\'|([^)]*))\s*\)~i',
@@ -640,11 +640,7 @@ function p1_bundle_frontend_styles( string $html ): string {
 		return $html;
 	}
 	$css = implode( "\n", $before ) . "\n" . p1_bundle_css_urls( $theme_css, get_theme_file_uri( 'style.css' ) ) . "\n" . implode( "\n", $after );
-	$uploads = wp_upload_dir( null, false );
-	if ( $uploads['error'] ) {
-		return $html;
-	}
-	$directory = $uploads['basedir'] . '/p1-assets';
+	$directory = get_stylesheet_directory() . '/assets/css';
 	$name = 'style-' . hash( 'sha256', $css ) . '.css';
 	$file = $directory . '/' . $name;
 	if ( ! is_readable( $file ) ) {
@@ -667,7 +663,7 @@ function p1_bundle_frontend_styles( string $html ): string {
 	}
 	$processor = new WP_HTML_Tag_Processor( $theme_link[0] );
 	$processor->next_tag( 'LINK' );
-	$processor->set_attribute( 'href', $uploads['baseurl'] . '/p1-assets/' . $name );
+	$processor->set_attribute( 'href', get_stylesheet_directory_uri() . '/assets/css/' . $name );
 	return str_replace( $theme_link[0], $processor->get_updated_html(), str_replace( $remove, '', $html ) );
 }
 add_filter( 'wp_template_enhancement_output_buffer', 'p1_bundle_frontend_styles', PHP_INT_MAX );
