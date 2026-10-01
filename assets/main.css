@@ -3998,19 +3998,27 @@ body[data-color-scheme="minimal"] .p1-c-comment-device-icon .p1-c-device-apple-d
 	box-shadow: none;
 	color: var(--p1-muted);
 	text-decoration: none;
-	transition: color 160ms ease, transform 160ms ease;
+	transition: color 160ms ease;
 }
 
 .footer-social-link:hover,
 .footer-social-link:focus-visible {
 	color: var(--p1-accent);
+}
+
+.footer-social-link > :is(svg, i) {
+	display: block;
+	width: 16px;
+	height: 16px;
+	transition: transform 160ms ease;
+}
+
+.footer-social-link:hover > :is(svg, i),
+.footer-social-link:focus-visible > :is(svg, i) {
 	transform: scale(1.3);
 }
 
 .footer-social-link svg {
-	display: block;
-	width: 16px;
-	height: 16px;
 	fill: currentColor;
 }
 
