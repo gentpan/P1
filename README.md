@@ -68,7 +68,7 @@ assets/header-backgrounds/  页头背景
 
 直接维护主题内的 PHP、CSS 和 JavaScript 文件，无需额外构建步骤。
 
-前台会将主题 CSS 与 WordPress 生成的区块、全局和图片尺寸样式合并，生成到主题的 `assets/css/style-*.css`。文件名根据内容生成，设置和样式改变后自动更新；目录不可写时保留原有样式加载方式。生成文件不提交到 Git，`style.css` 是维护的源文件。动态脚本配置放在页面属性中，由 `assets/js/app.js` 读取。自定义器预览保留 WordPress 的原始样式输出，以支持实时修改。
+前台会将主题 CSS 与 WordPress 生成的区块、全局和图片尺寸样式合并，写入主题内固定的 `assets/css/style-bundle.css`。样式内容变化时覆盖此文件，并更新链接上的数字版本号以刷新浏览器缓存；目录不可写时保留原有样式加载方式。生成文件不提交到 Git，`style.css` 是维护的源文件。动态脚本配置放在页面属性中，由 `assets/js/app.js` 读取。自定义器预览保留 WordPress 的原始样式输出，以支持实时修改。
 
 `screenshot.png` 目前沿用旧主题预览，并不代表当前界面。主题仍在迭代中，正式站点更新前建议先在自己的环境中预览。
 

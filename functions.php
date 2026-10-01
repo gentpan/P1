@@ -641,9 +641,10 @@ function p1_bundle_frontend_styles( string $html ): string {
 	}
 	$css = implode( "\n", $before ) . "\n" . p1_bundle_css_urls( $theme_css, get_theme_file_uri( 'style.css' ) ) . "\n" . implode( "\n", $after );
 	$directory = get_stylesheet_directory() . '/assets/css';
-	$name = 'style-' . hash( 'sha256', $css ) . '.css';
+	$checksum = hash( 'sha256', $css );
+	$name = 'style-bundle.css';
 	$file = $directory . '/' . $name;
-	if ( ! is_readable( $file ) ) {
+	if ( ! is_readable( $file ) || hash_file( 'sha256', $file ) !== $checksum ) {
 		if ( ! wp_mkdir_p( $directory ) ) {
 			return $html;
 		}
@@ -663,7 +664,7 @@ function p1_bundle_frontend_styles( string $html ): string {
 	}
 	$processor = new WP_HTML_Tag_Processor( $theme_link[0] );
 	$processor->next_tag( 'LINK' );
-	$processor->set_attribute( 'href', get_stylesheet_directory_uri() . '/assets/css/' . $name );
+	$processor->set_attribute( 'href', get_stylesheet_directory_uri() . '/assets/css/' . $name . '?ver=' . sprintf( '%u', crc32( $css ) ) );
 	return str_replace( $theme_link[0], $processor->get_updated_html(), str_replace( $remove, '', $html ) );
 }
 add_filter( 'wp_template_enhancement_output_buffer', 'p1_bundle_frontend_styles', PHP_INT_MAX );
