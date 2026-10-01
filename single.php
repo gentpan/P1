@@ -25,7 +25,7 @@ get_header();
 
 				</header>
 				<div class="single-post-body">
-					<div class="entry entry--reading"><?php p1_render_reading_summary( $p1_post_id ); ?><?php the_content(); ?><?php wp_link_pages( array( 'before' => '<nav class="page-links"><strong>' . esc_html( p1_theme_text( 'page_links', __( 'Pages:', 'u5' ) ) ) . '</strong> ', 'after' => '</nav>' ) ); ?></div>
+					<div class="entry entry--reading"><?php p1_render_reading_summary( $p1_post_id ); ?><?php the_content(); ?><?php wp_link_pages( array( 'before' => '<nav class="page-links"><strong>' . esc_html( p1_theme_text( 'page_links', __( 'Pages:', 'p1' ) ) ) . '</strong> ', 'after' => '</nav>' ) ); ?></div>
 					<div class="single-post-like"><?php echo p1_like_button_html( $p1_post_id ); ?></div>
 				</div>
 				<footer class="single-post-footer">

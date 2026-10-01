@@ -20,7 +20,7 @@ get_header();
 				</figure>
 				<div class="entry"><?php the_content(); ?></div>
 				<?php if ( wp_get_post_parent_id( get_the_ID() ) ) : ?>
-				<p><a href="<?php echo esc_url( get_permalink( wp_get_post_parent_id( get_the_ID() ) ?: get_the_ID() ) ); ?>"><?php echo esc_html( p1_theme_text( 'attachment_parent', __( 'View the associated post', 'u5' ) ) ); ?></a></p>
+				<p><a href="<?php echo esc_url( get_permalink( wp_get_post_parent_id( get_the_ID() ) ?: get_the_ID() ) ); ?>"><?php echo esc_html( p1_theme_text( 'attachment_parent', __( 'View the associated post', 'p1' ) ) ); ?></a></p>
 				<?php endif; ?>
 			</article>
 			<?php comments_template(); ?>

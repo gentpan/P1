@@ -40,11 +40,11 @@ if ( ! $p1_has_image ) {
 		<?php if ( '' !== $p1_summary ) : ?>
 			<div class="post-card-excerpt"><p><?php echo esc_html( $p1_summary ); ?></p></div>
 		<?php endif; ?>
-		<footer class="post-card-meta" aria-label="<?php echo esc_attr( p1_theme_text( 'post_details', __( 'Post details', 'u5' ) ) ); ?>">
+		<footer class="post-card-meta" aria-label="<?php echo esc_attr( p1_theme_text( 'post_details', __( 'Post details', 'p1' ) ) ); ?>">
 			<div class="post-card-meta-left">
 				<span class="post-card-meta-item post-card-time" title="<?php echo esc_attr( wp_date( p1_theme_text( 'time_full_format', 'Y-m-d H:i' ), $p1_timestamp ) ); ?>"><i class="fa-solid fa-clock" aria-hidden="true"></i><time datetime="<?php echo esc_attr( wp_date( DATE_W3C, $p1_timestamp ) ); ?>"><?php echo esc_html( p1_post_time_label( $p1_timestamp ) ); ?></time></span>
 				<?php echo p1_post_card_reading_meta_html( get_the_ID() ); ?>
-				<span class="post-card-meta-item"><i class="fa-solid fa-eye" aria-hidden="true"></i><span data-p1-view-count="<?php echo esc_attr( (string) get_the_ID() ); ?>"><?php echo esc_html( number_format_i18n( p1_get_post_views( get_the_ID() ) ) ); ?></span> <?php echo esc_html( p1_theme_text( 'views', __( 'views', 'u5' ) ) ); ?></span>
+				<span class="post-card-meta-item"><i class="fa-solid fa-eye" aria-hidden="true"></i><span data-p1-view-count="<?php echo esc_attr( (string) get_the_ID() ); ?>"><?php echo esc_html( number_format_i18n( p1_get_post_views( get_the_ID() ) ) ); ?></span> <?php echo esc_html( p1_theme_text( 'views', __( 'views', 'p1' ) ) ); ?></span>
 			</div>
 			<div class="post-card-meta-actions">
 				<a class="post-card-comments" data-p1-comment-post="<?php echo esc_attr( (string) get_the_ID() ); ?>" href="<?php echo esc_url( get_comments_link() ); ?>" aria-label="<?php echo esc_attr( wp_strip_all_tags( p1_comments_label() ) ); ?>" title="<?php echo esc_attr( wp_strip_all_tags( p1_comments_label() ) ); ?>"><i class="fa-regular fa-comment" aria-hidden="true"></i><span><?php echo esc_html( number_format_i18n( (int) get_comments_number() ) ); ?></span></a>
@@ -56,8 +56,8 @@ if ( ! $p1_has_image ) {
 			<?php endwhile; ?>
 			<?php p1_posts_load_more(); ?>
 		<?php else : ?>
-			<?php p1_render_page_header( p1_theme_text( 'not_found', __( 'Not found', 'u5' ) ) ); ?>
-			<p><?php echo esc_html( p1_theme_text( 'not_found_description', __( 'Sorry, nothing was found here.', 'u5' ) ) ); ?></p>
+			<?php p1_render_page_header( p1_theme_text( 'not_found', __( 'Not found', 'p1' ) ) ); ?>
+			<p><?php echo esc_html( p1_theme_text( 'not_found_description', __( 'Sorry, nothing was found here.', 'p1' ) ) ); ?></p>
 			<?php get_search_form(); ?>
 		<?php endif; ?>
 	</main>

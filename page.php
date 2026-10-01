@@ -16,8 +16,8 @@ get_header();
 			<?php else : ?>
 			<article <?php post_class( 'post' ); ?> id="post-<?php the_ID(); ?>">
 				<?php p1_render_page_header( get_the_title() ); ?>
-				<div class="entry entry--reading"><?php the_content(); ?><?php wp_link_pages( array( 'before' => '<nav class="page-links"><strong>' . esc_html( p1_theme_text( 'page_links', __( 'Pages:', 'u5' ) ) ) . '</strong> ', 'after' => '</nav>' ) ); ?></div>
-				<?php edit_post_link( esc_html( p1_theme_text( 'edit', __( 'Edit this page', 'u5' ) ) ) ); ?>
+				<div class="entry entry--reading"><?php the_content(); ?><?php wp_link_pages( array( 'before' => '<nav class="page-links"><strong>' . esc_html( p1_theme_text( 'page_links', __( 'Pages:', 'p1' ) ) ) . '</strong> ', 'after' => '</nav>' ) ); ?></div>
+				<?php edit_post_link( esc_html( p1_theme_text( 'edit', __( 'Edit this page', 'p1' ) ) ) ); ?>
 			</article>
 			<?php $p1_special_page = p1_render_special_page_content(); ?>
 			<?php if ( ! $p1_special_page && ( comments_open() || get_comments_number() ) ) : comments_template(); endif; ?>

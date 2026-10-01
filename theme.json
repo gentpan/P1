@@ -10,12 +10,12 @@
     "color": {
       "defaultPalette": false,
       "palette": [
-        { "slug": "u5-page", "name": "Page background", "color": "#252525" },
-        { "slug": "u5-panel", "name": "Panel", "color": "#303030" },
-        { "slug": "u5-text", "name": "Text", "color": "#f3f3f3" },
-        { "slug": "u5-muted", "name": "Muted text", "color": "#b7b7b7" },
-        { "slug": "u5-accent", "name": "Accent", "color": "#8ab43f" },
-        { "slug": "u5-link", "name": "Links", "color": "#8ab43f" }
+        { "slug": "p1-page", "name": "Page background", "color": "#252525" },
+        { "slug": "p1-panel", "name": "Panel", "color": "#303030" },
+        { "slug": "p1-text", "name": "Text", "color": "#f3f3f3" },
+        { "slug": "p1-muted", "name": "Muted text", "color": "#b7b7b7" },
+        { "slug": "p1-accent", "name": "Accent", "color": "#8ab43f" },
+        { "slug": "p1-link", "name": "Links", "color": "#8ab43f" }
       ]
     },
     "spacing": {

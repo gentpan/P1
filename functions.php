@@ -445,8 +445,8 @@ function p1_with_post_lock( string $operation, int $post_id, callable $callback 
 
 /** Theme support and WordPress presentation filters. @package P1 */
 
-function u5_setup(): void {
-	load_theme_textdomain( 'u5', get_theme_file_path( 'languages' ) );
+function p1_setup(): void {
+	load_theme_textdomain( 'p1', get_theme_file_path( 'languages' ) );
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'automatic-feed-links' );
 	add_theme_support(
@@ -470,11 +470,11 @@ function u5_setup(): void {
 	);
 	register_nav_menus(
 		array(
-			'primary' => p1_theme_text( 'primary_menu', __( 'Primary menu', 'u5' ) ),
+			'primary' => p1_theme_text( 'primary_menu', __( 'Primary menu', 'p1' ) ),
 		)
 	);
 }
-add_action( 'after_setup_theme', 'u5_setup' );
+add_action( 'after_setup_theme', 'p1_setup' );
 
 /** Let browsers render Unicode emoji directly instead of loading WordPress SVG/PNG replacements. */
 function p1_use_native_emoji(): void {
@@ -522,10 +522,10 @@ function p1_escape_legacy_code_examples( string $content ): string {
 }
 add_filter( 'the_content', 'p1_escape_legacy_code_examples', 8 );
 
-function u5_content_width(): void {
-	$GLOBALS['content_width'] = apply_filters( 'u5_content_width', 960 );
+function p1_content_width(): void {
+	$GLOBALS['content_width'] = apply_filters( 'p1_content_width', 960 );
 }
-add_action( 'after_setup_theme', 'u5_content_width', 0 );
+add_action( 'after_setup_theme', 'p1_content_width', 0 );
 
 /* ================================================================
  * assets
@@ -533,7 +533,7 @@ add_action( 'after_setup_theme', 'u5_content_width', 0 );
 
 /** Front-end assets use WordPress dependency resolution and deferred scripts. @package P1 */
 
-function u5_enqueue_assets(): void {
+function p1_enqueue_assets(): void {
 	$dependencies = array();
 	$fonts = p1_font_choices();
 	foreach ( p1_selected_remote_fonts() as $key ) {
@@ -544,10 +544,10 @@ function u5_enqueue_assets(): void {
 	// Shared footer icons require Font Awesome on every front-end page.
 	wp_enqueue_style( 'p1-font-awesome', 'https://static.bluecdn.com/libs/fontawesome-pro-plus/7.3.1/css/all.min.css', array(), '7.3.1' );
 	$dependencies[] = 'p1-font-awesome';
-	p1_enqueue_local_style( 'u5-style', 'style.css', $dependencies );
+	p1_enqueue_local_style( 'p1-style', 'style.css', $dependencies );
 	$url = p1_site_background_url();
 	$background = $url ? 'url(' . wp_json_encode( esc_url_raw( $url ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . ')' : 'none';
-	wp_add_inline_style( 'u5-style', 'body { --p1-background-image: ' . $background . '; }' );
+	wp_add_inline_style( 'p1-style', 'body { --p1-background-image: ' . $background . '; }' );
 
 	if ( is_singular() ) {
 		p1_enqueue_local_script( 'p1-highlight', 'assets/js/highlight.min.js' );
@@ -563,7 +563,7 @@ function u5_enqueue_assets(): void {
 	// Comment reply and the theme's delegated listeners must survive PJAX transitions.
 	wp_enqueue_script( 'comment-reply' );
 }
-add_action( 'wp_enqueue_scripts', 'u5_enqueue_assets' );
+add_action( 'wp_enqueue_scripts', 'p1_enqueue_assets' );
 
 /** Dynamic values remain in the HTML while all executable code lives in app.js. */
 function p1_runtime_config(): string {
@@ -573,9 +573,9 @@ function p1_runtime_config(): string {
 			'likes' => array(
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 				'nonce' => wp_create_nonce( 'p1_toggle_post_like' ),
-				'likeLabel' => p1_theme_text( 'like_action', __( 'Like this post', 'u5' ) ),
+				'likeLabel' => p1_theme_text( 'like_action', __( 'Like this post', 'p1' ) ),
 				'likedLabel' => p1_theme_text( 'liked_action', '已点赞' ),
-				'errorLabel' => p1_theme_text( 'like_error', __( 'Could not save your like. Please try again.', 'u5' ) ),
+				'errorLabel' => p1_theme_text( 'like_error', __( 'Could not save your like. Please try again.', 'p1' ) ),
 			),
 			'pjax' => array(
 				'homeUrl' => home_url( '/' ),
@@ -607,7 +607,7 @@ function p1_bundle_frontend_styles( string $html ): string {
 	if ( is_admin() || is_customize_preview() || is_feed() || wp_doing_ajax() ) {
 		return $html;
 	}
-	if ( ! preg_match( '~<link\b[^>]*\bid=["\']u5-style-css["\'][^>]*>~i', $html, $theme_link ) ) {
+	if ( ! preg_match( '~<link\b[^>]*\bid=["\']p1-style-css["\'][^>]*>~i', $html, $theme_link ) ) {
 		return $html;
 	}
 	$theme_file = get_theme_file_path( 'style.css' );
@@ -618,7 +618,7 @@ function p1_bundle_frontend_styles( string $html ): string {
 	$before = array();
 	$after = array();
 	$remove = array();
-	$allowed = array( 'wp-block-library-inline-css', 'global-styles-inline-css', 'wp-img-auto-sizes-contain-inline-css', 'u5-style-inline-css' );
+	$allowed = array( 'wp-block-library-inline-css', 'global-styles-inline-css', 'wp-img-auto-sizes-contain-inline-css', 'p1-style-inline-css' );
 	if ( preg_match_all( '~<style\b[^>]*\bid=["\']([^"\']+)["\'][^>]*>(.*?)</style>~is', $html, $styles, PREG_SET_ORDER ) ) {
 		foreach ( $styles as $style ) {
 			if ( ! in_array( $style[1], $allowed, true ) ) {
@@ -628,7 +628,7 @@ function p1_bundle_frontend_styles( string $html ): string {
 			if ( 'wp-block-library-inline-css' === $style[1] ) {
 				$css = p1_bundle_css_urls( $css, includes_url( 'css/dist/block-library/common.min.css' ) );
 			}
-			if ( 'u5-style-inline-css' === $style[1] ) {
+			if ( 'p1-style-inline-css' === $style[1] ) {
 				$after[] = $css;
 			} else {
 				$before[] = $css;
@@ -753,13 +753,13 @@ function p1_settings_defaults(): array {
 
 /** Read old settings until the new page is saved for the first time. */
 function p1_legacy_settings(): array {
-	$old_style = u5_sanitize_style( get_theme_mod( 'u5_style', get_option( 'utom_style', 'style.css' ) ) );
+	$old_style = p1_sanitize_style( get_theme_mod( 'p1_style', get_option( 'utom_style', 'style.css' ) ) );
 	$schemes = array( 'style.css' => 'olive', 'pink_style.css' => 'pink', 'no_style.css' => 'minimal' );
 	return array(
 		'color_scheme'          => $schemes[ $old_style ],
 		'card_image_layout'     => p1_sanitize_card_image_layout( get_theme_mod( 'p1_card_image_layout', 'side' ) ),
-		'footer_rss_enabled'    => wp_validate_boolean( get_theme_mod( 'u5_header_rss_enabled', true ) ),
-		'footer_rss_url'        => p1_sanitize_external_url( get_theme_mod( 'u5_header_rss_url', get_feed_link() ) ),
+		'footer_rss_enabled'    => wp_validate_boolean( get_theme_mod( 'p1_header_rss_enabled', true ) ),
+		'footer_rss_url'        => p1_sanitize_external_url( get_theme_mod( 'p1_header_rss_url', get_feed_link() ) ),
 	);
 }
 
@@ -825,7 +825,7 @@ function p1_sanitize_color_scheme( $value ): string {
 	return in_array( $value, array( 'olive', 'lime', 'neon', 'pink', 'minimal' ), true ) ? $value : 'olive';
 }
 
-function u5_sanitize_style( $value ): string {
+function p1_sanitize_style( $value ): string {
 	return in_array( $value, array( 'style.css', 'pink_style.css', 'no_style.css' ), true ) ? $value : 'style.css';
 }
 
@@ -1127,7 +1127,7 @@ function p1_persist_settings_tab( array $submitted, string $tab ): array|WP_Erro
 
 function p1_save_settings(): void {
 	if ( ! current_user_can( 'edit_theme_options' ) ) {
-		wp_die( esc_html__( '你没有权限修改主题设置。', 'u5' ), '', array( 'response' => 403 ) );
+		wp_die( esc_html__( '你没有权限修改主题设置。', 'p1' ), '', array( 'response' => 403 ) );
 	}
 	check_admin_referer( 'p1_save_settings' );
 	$input = is_array( $_POST['p1'] ?? null ) ? wp_unslash( $_POST['p1'] ) : array();
@@ -1219,7 +1219,7 @@ function p1_render_settings_page(): void {
 
 function p1_render_settings_tab_content( ?string $requested_tab = null ): void {
 	if ( ! current_user_can( 'edit_theme_options' ) ) {
-		wp_die( esc_html__( '你没有权限修改主题设置。', 'u5' ) );
+		wp_die( esc_html__( '你没有权限修改主题设置。', 'p1' ) );
 	}
 	$tabs = p1_settings_tabs();
 	$active_tab = $requested_tab ?? ( is_string( $_GET['tab'] ?? null ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'appearance' );
@@ -1581,10 +1581,10 @@ function p1_render_reading_summary( int $id ): void {
 
 const P1_READING_WORDS_PER_MINUTE = 300;
 
-function u5_primary_menu_fallback( $args = array() ): void {
+function p1_primary_menu_fallback( $args = array() ): void {
 	$is_current = is_front_page();
 	echo '<ul class="menu">';
-	echo '<li class="' . ( $is_current ? 'current_page_item' : 'page_item' ) . '"><a href="' . esc_url( home_url( '/' ) ) . '"' . ( $is_current ? ' aria-current="page"' : '' ) . '>' . esc_html( p1_theme_text( 'home', __( 'Home', 'u5' ) ) ) . '</a></li>';
+	echo '<li class="' . ( $is_current ? 'current_page_item' : 'page_item' ) . '"><a href="' . esc_url( home_url( '/' ) ) . '"' . ( $is_current ? ' aria-current="page"' : '' ) . '>' . esc_html( p1_theme_text( 'home', __( 'Home', 'p1' ) ) ) . '</a></li>';
 	echo '</ul>';
 }
 
@@ -1592,7 +1592,7 @@ function u5_primary_menu_fallback( $args = array() ): void {
 function p1_localize_home_menu_title( $title, $item ): string {
 	$name = strtolower( trim( wp_strip_all_tags( (string) $title ) ) );
 	if ( in_array( $name, array( 'blog', 'home' ), true ) && untrailingslashit( $item->url ) === untrailingslashit( home_url( '/' ) ) ) {
-		return p1_theme_text( 'home', __( 'Home', 'u5' ) );
+		return p1_theme_text( 'home', __( 'Home', 'p1' ) );
 	}
 	return (string) $title;
 }
@@ -1677,7 +1677,7 @@ function p1_primary_menu_has_icons(): bool {
 function p1_render_random_post_button( bool $in_header = false ): void {
 	$p1_random_sprite = get_theme_file_uri( 'assets/icons/fontawesome-used.svg' );
 	?>
-			<a class="quickbar-random-button<?php echo $in_header ? ' header-action-button' : ''; ?>" href="<?php echo esc_url( add_query_arg( 'u5_random_post', '1', home_url( '/' ) ) ); ?>" aria-label="<?php echo esc_attr( p1_theme_text( 'random_post', '随机文章' ) ); ?>" title="<?php echo esc_attr( p1_theme_text( 'random_post', '随机文章' ) ); ?>" rel="nofollow"><svg class="quickbar-dice-icon" aria-hidden="true" focusable="false"><use href="<?php echo esc_url( $p1_random_sprite . '#dice' ); ?>"></use></svg><svg class="quickbar-loading-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"></path></svg></a>
+			<a class="quickbar-random-button<?php echo $in_header ? ' header-action-button' : ''; ?>" href="<?php echo esc_url( add_query_arg( 'p1_random_post', '1', home_url( '/' ) ) ); ?>" aria-label="<?php echo esc_attr( p1_theme_text( 'random_post', '随机文章' ) ); ?>" title="<?php echo esc_attr( p1_theme_text( 'random_post', '随机文章' ) ); ?>" rel="nofollow"><svg class="quickbar-dice-icon" aria-hidden="true" focusable="false"><use href="<?php echo esc_url( $p1_random_sprite . '#dice' ); ?>"></use></svg><svg class="quickbar-loading-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"></path></svg></a>
 	<?php
 }
 
@@ -1686,7 +1686,7 @@ function p1_render_header_menu(): void {
 	?>
 	<div id="menuToggle" class="header-menu">
 		<input id="checkbox" type="checkbox">
-		<label class="toggle" for="checkbox" role="button" tabindex="0" aria-label="<?php echo esc_attr( p1_theme_text( 'menu_open', __( 'Open menu', 'u5' ) ) ); ?>" aria-controls="p1-menu-dialog" aria-expanded="false" data-open-label="<?php echo esc_attr( p1_theme_text( 'menu_open', __( 'Open menu', 'u5' ) ) ); ?>" data-close-label="<?php echo esc_attr( p1_theme_text( 'menu_close', __( 'Close menu', 'u5' ) ) ); ?>">
+		<label class="toggle" for="checkbox" role="button" tabindex="0" aria-label="<?php echo esc_attr( p1_theme_text( 'menu_open', __( 'Open menu', 'p1' ) ) ); ?>" aria-controls="p1-menu-dialog" aria-expanded="false" data-open-label="<?php echo esc_attr( p1_theme_text( 'menu_open', __( 'Open menu', 'p1' ) ) ); ?>" data-close-label="<?php echo esc_attr( p1_theme_text( 'menu_close', __( 'Close menu', 'p1' ) ) ); ?>">
 			<div class="bar bar--top"></div>
 			<div class="bar bar--middle"></div>
 			<div class="bar bar--bottom"></div>
@@ -1695,19 +1695,19 @@ function p1_render_header_menu(): void {
 	<?php
 }
 
-function u5_get_color_scheme(): string {
+function p1_get_color_scheme(): string {
 	return p1_sanitize_color_scheme( p1_setting( 'color_scheme' ) );
 }
 
 function p1_comments_label(): string {
 	return get_comments_number_text(
-		esc_html( p1_theme_text( 'comments_none', __( 'No comments', 'u5' ) ) ),
-		esc_html( p1_theme_text( 'comments_one', __( '1 Comment', 'u5' ) ) ),
-		esc_html( p1_theme_text( 'comments_many', __( '% Comments', 'u5' ) ) )
+		esc_html( p1_theme_text( 'comments_none', __( 'No comments', 'p1' ) ) ),
+		esc_html( p1_theme_text( 'comments_one', __( '1 Comment', 'p1' ) ) ),
+		esc_html( p1_theme_text( 'comments_many', __( '% Comments', 'p1' ) ) )
 	);
 }
 
-function u5_comments_link(): string {
+function p1_comments_link(): string {
 	return '<a href="' . esc_url( get_comments_link() ) . '">' . wp_kses_post( p1_comments_label() ) . '</a>';
 }
 
@@ -1910,7 +1910,7 @@ function p1_post_card_reading_meta_html( int $post_id ): string {
 function p1_post_time_label( int $timestamp ): string {
 	$elapsed = max( 0, time() - $timestamp );
 	if ( $elapsed < MINUTE_IN_SECONDS ) {
-		return p1_theme_text( 'time_just_now', __( 'Just now', 'u5' ) );
+		return p1_theme_text( 'time_just_now', __( 'Just now', 'p1' ) );
 	}
 
 	if ( $elapsed < HOUR_IN_SECONDS ) {
@@ -1950,8 +1950,8 @@ function p1_post_time_label( int $timestamp ): string {
 }
 
 /** Resolve the header dice link to one published post without caching the redirect. */
-function u5_redirect_random_post(): void {
-	if ( ! isset( $_GET['u5_random_post'] ) || '1' !== $_GET['u5_random_post'] ) {
+function p1_redirect_random_post(): void {
+	if ( ! isset( $_GET['p1_random_post'] ) || '1' !== $_GET['p1_random_post'] ) {
 		return;
 	}
 
@@ -1974,7 +1974,7 @@ function u5_redirect_random_post(): void {
 	wp_safe_redirect( $destination, 302 );
 	exit;
 }
-add_action( 'template_redirect', 'u5_redirect_random_post' );
+add_action( 'template_redirect', 'p1_redirect_random_post' );
 
 /* ================================================================
  * comments
@@ -2477,14 +2477,14 @@ function p1_add_category_icon_fields(): void {
 	wp_nonce_field( 'p1_save_category_icon', 'p1_category_icon_nonce' );
 	?>
 	<div class="form-field">
-		<label for="p1-icon-class"><?php esc_html_e( 'Font Awesome 图标', 'u5' ); ?></label>
+		<label for="p1-icon-class"><?php esc_html_e( 'Font Awesome 图标', 'p1' ); ?></label>
 		<input id="p1-icon-class" name="p1_icon_class" type="text" placeholder="fa-solid fa-link">
-		<p><?php esc_html_e( '支持 Font Awesome 类名或完整 i 标签，例如 fa-sharp fa-solid fa-code。', 'u5' ); ?></p>
+		<p><?php esc_html_e( '支持 Font Awesome 类名或完整 i 标签，例如 fa-sharp fa-solid fa-code。', 'p1' ); ?></p>
 	</div>
 	<div class="form-field">
-		<label for="p1-icon-svg"><?php esc_html_e( '自定义 SVG 图标', 'u5' ); ?></label>
+		<label for="p1-icon-svg"><?php esc_html_e( '自定义 SVG 图标', 'p1' ); ?></label>
 		<textarea id="p1-icon-svg" name="p1_icon_svg" rows="5"></textarea>
-		<p><?php esc_html_e( '可选。填写 SVG 后，会优先显示 SVG 图标。', 'u5' ); ?></p>
+		<p><?php esc_html_e( '可选。填写 SVG 后，会优先显示 SVG 图标。', 'p1' ); ?></p>
 	</div>
 	<?php
 }
@@ -2497,12 +2497,12 @@ function p1_edit_category_icon_fields( WP_Term $term ): void {
 	wp_nonce_field( 'p1_save_category_icon', 'p1_category_icon_nonce' );
 	?>
 	<tr class="form-field">
-		<th scope="row"><label for="p1-icon-class"><?php esc_html_e( 'Font Awesome 图标', 'u5' ); ?></label></th>
-		<td><input id="p1-icon-class" name="p1_icon_class" type="text" value="<?php echo esc_attr( $icon_class ); ?>" placeholder="fa-thin fa-scarecrow"><p class="description"><?php esc_html_e( '支持 Font Awesome 类名或完整 i 标签，例如 fa-sharp fa-solid fa-code。', 'u5' ); ?></p></td>
+		<th scope="row"><label for="p1-icon-class"><?php esc_html_e( 'Font Awesome 图标', 'p1' ); ?></label></th>
+		<td><input id="p1-icon-class" name="p1_icon_class" type="text" value="<?php echo esc_attr( $icon_class ); ?>" placeholder="fa-thin fa-scarecrow"><p class="description"><?php esc_html_e( '支持 Font Awesome 类名或完整 i 标签，例如 fa-sharp fa-solid fa-code。', 'p1' ); ?></p></td>
 	</tr>
 	<tr class="form-field">
-		<th scope="row"><label for="p1-icon-svg"><?php esc_html_e( '自定义 SVG 图标', 'u5' ); ?></label></th>
-		<td><textarea id="p1-icon-svg" name="p1_icon_svg" rows="6"><?php echo esc_textarea( $icon_svg ); ?></textarea><p class="description"><?php esc_html_e( '可选。填写 SVG 后，会优先显示 SVG 图标。', 'u5' ); ?></p></td>
+		<th scope="row"><label for="p1-icon-svg"><?php esc_html_e( '自定义 SVG 图标', 'p1' ); ?></label></th>
+		<td><textarea id="p1-icon-svg" name="p1_icon_svg" rows="6"><?php echo esc_textarea( $icon_svg ); ?></textarea><p class="description"><?php esc_html_e( '可选。填写 SVG 后，会优先显示 SVG 图标。', 'p1' ); ?></p></td>
 	</tr>
 	<?php
 }
@@ -3060,7 +3060,7 @@ add_action( 'wp_ajax_p1_note_save', 'p1_save_front_note_ajax' );
 
 function p1_manage_front_note(): void {
 	if ( ! p1_note_can_publish() ) {
-		wp_die( esc_html__( '请先登录再管理说说。', 'u5' ), '', array( 'response' => 403 ) );
+		wp_die( esc_html__( '请先登录再管理说说。', 'p1' ), '', array( 'response' => 403 ) );
 	}
 	check_admin_referer( 'p1_note_manage' );
 	$input   = wp_unslash( $_POST );
@@ -3397,7 +3397,7 @@ add_action( 'before_delete_post', 'p1_delete_post_likes' );
 
 function p1_like_button_html( int $post_id ): string {
 	$count = p1_get_post_likes( $post_id );
-	$label = p1_theme_text( 'like_action', __( 'Like this post', 'u5' ) );
+	$label = p1_theme_text( 'like_action', __( 'Like this post', 'p1' ) );
 	return '<span class="p1-like-control"><button class="p1-like-button" type="button" data-p1-like-post="' . esc_attr( (string) $post_id ) . '" aria-pressed="false" aria-label="' . esc_attr( $label ) . '"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg><span class="p1-like-count">' . esc_html( number_format_i18n( $count ) ) . '</span></button><span class="p1-like-feedback" role="status" aria-live="polite"></span></span>';
 }
 
@@ -4096,8 +4096,8 @@ function p1_render_subscriptions_page(): void {
 
 /** Keep the existing page template choices without duplicate template files. */
 function p1_register_special_page_templates( array $templates ): array {
-	$templates['archives.php'] = p1_theme_text( 'archives', __( 'Archives', 'u5' ) );
-	$templates['links.php']    = p1_theme_text( 'links', __( 'Links', 'u5' ) );
+	$templates['archives.php'] = p1_theme_text( 'archives', __( 'Archives', 'p1' ) );
+	$templates['links.php']    = p1_theme_text( 'links', __( 'Links', 'p1' ) );
 	$templates['subscriptions.php'] = '订阅动态';
 	$templates['pages/about.php'] = '关于页面';
 	return $templates;
