@@ -54,28 +54,30 @@ API 凭据、账户信息、评论和文章等运行数据保存在 WordPress �
 
 ```text
 functions.php          主题功能、设置、页面模式与请求处理
-style.css              主题元数据、配色、组件与响应式样式
+style.css              WordPress 主题元数据
 theme.json             WordPress 编辑器配置
 page-memos.php         说说页面与发布表单
-assets/js/app.js       前端交互
-assets/js/admin.js     主题设置交互
-assets/css/            后台样式
+assets/main.css        前端样式源文件
+assets/main.js         前端交互源文件
+assets/admin.css       后台样式源文件
+assets/admin.js        主题设置交互源文件
+assets/*.min.js        线上使用的压缩脚本
+assets/admin.min.css   后台使用的压缩样式
 assets/lib/            内置 WebAuthn 库
 assets/fonts/          本地字体与授权说明
 assets/backgrounds/    页面背景
 assets/header-backgrounds/  页头背景
 ```
 
-直接维护主题内的 PHP、CSS 和 JavaScript 文件，无需额外构建步骤。
+修改 JavaScript 或后台 CSS 后，运行 `npm install` 和 `npm run build`，生成并提交对应的压缩文件。
 
-前台会将主题 CSS 与 WordPress 生成的区块、全局和图片尺寸样式合并，写入主题内固定的 `assets/css/style-bundle.css`。样式内容变化时覆盖此文件，并更新链接上的数字版本号以刷新浏览器缓存；目录不可写时保留原有样式加载方式。生成文件不提交到 Git，`style.css` 是维护的源文件。动态脚本配置放在页面属性中，由 `assets/js/app.js` 读取。自定义器预览保留 WordPress 的原始样式输出，以支持实时修改。
+前台会将 `assets/main.css` 与 WordPress 生成的区块、全局和图片尺寸样式合并压缩，写入固定的 `assets/main.min.css`。样式内容变化时覆盖此文件，并更新链接上的数字版本号以刷新浏览器缓存；目录不可写时回退加载源样式。生成文件不提交到 Git，部署时需要保证 `assets/` 目录可写。动态脚本配置放在页面属性中，由 `assets/main.min.js` 读取。自定义器预览使用源样式，以支持实时修改。
 
 `screenshot.png` 目前沿用旧主题预览，并不代表当前界面。主题仍在迭代中，正式站点更新前建议先在自己的环境中预览。
 
 ## 第三方资源
 
 - WebAuthn：基于 `lbuchs/WebAuthn` 的内置子集，MIT 授权与版权说明保留在 `assets/lib/webauthn.php`。
-- 代码高亮：授权说明见 `assets/js/highlight.LICENSE`。
+- 代码高亮：授权说明见 `assets/highlight.LICENSE`。
 - Ioskeley Mono：来源及授权说明见 `assets/fonts/ioskeley-mono/`。
-- 本地图标子集：来自 Font Awesome Free 7.3.1，图标遵循 CC BY 4.0。
 - 内置背景图的生成说明见对应资源目录中的 README。

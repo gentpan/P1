@@ -28,7 +28,6 @@ wp-config.php
 *.bak
 backups/
 node_modules/
-# Generated merged styles are rebuilt from theme files and WordPress settings.
-assets/css/style-*.css
-assets/css/style-bundle.css
-assets/css/p1-css-*
+# Generated public CSS merges theme styles with WordPress settings at runtime.
+assets/main.min.css
+assets/p1-css-*

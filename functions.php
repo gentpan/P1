@@ -415,7 +415,7 @@ function p1_passkey_profile( WP_User $user ): void {
 add_action( 'show_user_profile', 'p1_passkey_profile' );
 
 function p1_passkey_assets( string $hook = '' ): void {
-	if ( 'profile.php' === $hook || '' === $hook ) { p1_enqueue_local_script( 'p1-passkey', 'assets/js/admin.js', array(), true ); }
+	if ( 'profile.php' === $hook || '' === $hook ) { p1_enqueue_local_script( 'p1-passkey', 'assets/admin.min.js', array(), true ); }
 	if ( 'profile.php' === $hook ) {
 		wp_add_inline_style( 'common', '.p1-passkey-profile{max-width:780px;margin:28px 0}.p1-passkey-profile li{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #dcdcde}.p1-passkey-profile li span{color:#646970;font-size:12px}.p1-passkey-profile li button{margin-inline-start:auto}.p1-passkey-profile [data-p1-passkey-status]{min-height:20px}.p1-passkey-profile [data-error="true"]{color:#b32d2e}@media(max-width:600px){.p1-passkey-profile #p1-passkey-name{display:block;width:100%;margin:8px 0}.p1-passkey-profile li span{flex-basis:100%;order:1}}' );
 	}
@@ -544,13 +544,13 @@ function p1_enqueue_assets(): void {
 	// Shared footer icons require Font Awesome on every front-end page.
 	wp_enqueue_style( 'p1-font-awesome', 'https://static.bluecdn.com/libs/fontawesome-pro-plus/7.3.1/css/all.min.css', array(), '7.3.1' );
 	$dependencies[] = 'p1-font-awesome';
-	p1_enqueue_local_style( 'p1-style', 'style.css', $dependencies );
+	p1_enqueue_local_style( 'p1-style', 'assets/main.css', $dependencies );
 	$url = p1_site_background_url();
 	$background = $url ? 'url(' . wp_json_encode( esc_url_raw( $url ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . ')' : 'none';
 	wp_add_inline_style( 'p1-style', 'body { --p1-background-image: ' . $background . '; }' );
 
 	if ( is_singular() ) {
-		p1_enqueue_local_script( 'p1-highlight', 'assets/js/highlight.min.js' );
+		p1_enqueue_local_script( 'p1-highlight', 'assets/highlight.min.js' );
 		wp_enqueue_script( 'p1-litezoom', 'https://litezoom.dev/litezoom.min.js', array(), null, array( 'in_footer' => true, 'strategy' => 'defer' ) );
 	}
 	$dependencies = array( 'comment-reply' );
@@ -558,14 +558,14 @@ function p1_enqueue_assets(): void {
 		$dependencies[] = 'p1-highlight';
 		$dependencies[] = 'p1-litezoom';
 	}
-	p1_enqueue_local_script( 'p1-app', 'assets/js/app.js', $dependencies );
+	p1_enqueue_local_script( 'p1-app', 'assets/main.min.js', $dependencies );
 
 	// Comment reply and the theme's delegated listeners must survive PJAX transitions.
 	wp_enqueue_script( 'comment-reply' );
 }
 add_action( 'wp_enqueue_scripts', 'p1_enqueue_assets' );
 
-/** Dynamic values remain in the HTML while all executable code lives in app.js. */
+/** Dynamic values remain in the HTML while all executable code lives in main.js. */
 function p1_runtime_config(): string {
 	return (string) wp_json_encode(
 		array(
@@ -579,7 +579,7 @@ function p1_runtime_config(): string {
 			),
 			'pjax' => array(
 				'homeUrl' => home_url( '/' ),
-				'highlightUrl' => get_theme_file_uri( 'assets/js/highlight.min.js' ),
+				'highlightUrl' => get_theme_file_uri( 'assets/highlight.min.js' ),
 				'litezoomUrl' => 'https://litezoom.dev/litezoom.min.js',
 			),
 		),
@@ -587,7 +587,7 @@ function p1_runtime_config(): string {
 	);
 }
 
-/** Resolve stylesheet-relative URLs when the stylesheet moves into the theme's CSS directory. */
+/** Resolve stylesheet-relative URLs in the generated asset bundle. */
 function p1_bundle_css_urls( string $css, string $source_url ): string {
 	return preg_replace_callback(
 		'~url\(\s*(?:"([^"]*)"|\'([^\']*)\'|([^)]*))\s*\)~i',
@@ -602,6 +602,50 @@ function p1_bundle_css_urls( string $css, string $source_url ): string {
 	) ?? $css;
 }
 
+/** Compress CSS without changing quoted strings, data URLs, or significant selector spacing. */
+function p1_minify_css( string $css ): string {
+	$output = '';
+	$length = strlen( $css );
+	$quote = '';
+	$space = false;
+	for ( $i = 0; $i < $length; $i++ ) {
+		$char = $css[ $i ];
+		if ( '' !== $quote ) {
+			$output .= $char;
+			if ( '\\' === $char && $i + 1 < $length ) {
+				$output .= $css[ ++$i ];
+			} elseif ( $char === $quote ) {
+				$quote = '';
+			}
+			continue;
+		}
+		if ( '/' === $char && $i + 1 < $length && '*' === $css[ $i + 1 ] ) {
+			$end = strpos( $css, '*/', $i + 2 );
+			if ( false === $end ) { break; }
+			$i = $end + 1;
+			$space = true;
+			continue;
+		}
+		if ( ctype_space( $char ) ) {
+			$space = true;
+			continue;
+		}
+		if ( '}' === $char || '{' === $char || ';' === $char || ',' === $char ) {
+			$output = rtrim( $output, ' ' );
+			$output .= $char;
+			$space = false;
+			continue;
+		}
+		if ( $space && '' !== $output && ! in_array( substr( $output, -1 ), array( '{', '}', ';', ',', ':' ), true ) ) {
+			$output .= ' ';
+		}
+		$space = false;
+		if ( '"' === $char || "'" === $char ) { $quote = $char; }
+		$output .= $char;
+	}
+	return trim( $output );
+}
+
 /** Merge generated core CSS and the theme stylesheet without freezing site settings. */
 function p1_bundle_frontend_styles( string $html ): string {
 	if ( is_admin() || is_customize_preview() || is_feed() || wp_doing_ajax() ) {
@@ -610,7 +654,7 @@ function p1_bundle_frontend_styles( string $html ): string {
 	if ( ! preg_match( '~<link\b[^>]*\bid=["\']p1-style-css["\'][^>]*>~i', $html, $theme_link ) ) {
 		return $html;
 	}
-	$theme_file = get_theme_file_path( 'style.css' );
+	$theme_file = get_theme_file_path( 'assets/main.css' );
 	$theme_css = is_readable( $theme_file ) ? file_get_contents( $theme_file ) : false;
 	if ( false === $theme_css ) {
 		return $html;
@@ -639,10 +683,10 @@ function p1_bundle_frontend_styles( string $html ): string {
 	if ( ! $remove ) {
 		return $html;
 	}
-	$css = implode( "\n", $before ) . "\n" . p1_bundle_css_urls( $theme_css, get_theme_file_uri( 'style.css' ) ) . "\n" . implode( "\n", $after );
-	$directory = get_stylesheet_directory() . '/assets/css';
+	$css = p1_minify_css( implode( "\n", $before ) . "\n" . p1_bundle_css_urls( $theme_css, get_theme_file_uri( 'assets/main.css' ) ) . "\n" . implode( "\n", $after ) );
+	$directory = get_stylesheet_directory() . '/assets';
 	$checksum = hash( 'sha256', $css );
-	$name = 'style-bundle.css';
+	$name = 'main.min.css';
 	$file = $directory . '/' . $name;
 	if ( ! is_readable( $file ) || hash_file( 'sha256', $file ) !== $checksum ) {
 		if ( ! wp_mkdir_p( $directory ) ) {
@@ -664,7 +708,7 @@ function p1_bundle_frontend_styles( string $html ): string {
 	}
 	$processor = new WP_HTML_Tag_Processor( $theme_link[0] );
 	$processor->next_tag( 'LINK' );
-	$processor->set_attribute( 'href', get_stylesheet_directory_uri() . '/assets/css/' . $name . '?ver=' . sprintf( '%u', crc32( $css ) ) );
+	$processor->set_attribute( 'href', get_stylesheet_directory_uri() . '/assets/' . $name . '?ver=' . sprintf( '%u', crc32( $css ) ) );
 	return str_replace( $theme_link[0], $processor->get_updated_html(), str_replace( $remove, '', $html ) );
 }
 add_filter( 'wp_template_enhancement_output_buffer', 'p1_bundle_frontend_styles', PHP_INT_MAX );
@@ -1032,8 +1076,8 @@ function p1_enqueue_settings_media( string $hook ): void {
 	}
 	wp_enqueue_media();
 	wp_enqueue_style( 'p1-font-awesome', 'https://static.bluecdn.com/libs/fontawesome-pro-plus/7.3.1/css/all.min.css', array(), '7.3.1' );
-	p1_enqueue_local_style( 'p1-admin-settings', 'assets/css/admin-settings.css', array( 'dashicons', 'p1-font-awesome' ) );
-	p1_enqueue_local_script( 'p1-admin', 'assets/js/admin.js', array( 'media-views' ), false );
+	p1_enqueue_local_style( 'p1-admin-settings', 'assets/admin.min.css', array( 'dashicons', 'p1-font-awesome' ) );
+	p1_enqueue_local_script( 'p1-admin', 'assets/admin.min.js', array( 'media-views' ), false );
 }
 add_action( 'admin_enqueue_scripts', 'p1_enqueue_settings_media' );
 
@@ -1496,7 +1540,7 @@ add_action( 'admin_enqueue_scripts', static function ( $hook ) {
 	$dependencies = array( 'jquery', 'wp-dom-ready' );
 	if ( $screen->is_block_editor() ) { $dependencies[] = 'wp-data'; $dependencies[] = 'wp-editor'; }
 	else { $dependencies[] = 'autosave'; }
-	p1_enqueue_local_script( 'p1-writing', 'assets/js/admin.js', $dependencies, false );
+	p1_enqueue_local_script( 'p1-writing', 'assets/admin.min.js', $dependencies, false );
 	wp_localize_script( 'p1-writing', 'p1Writing', array(
 		'endpoint' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( 'p1_ai_summary' ),
 		'disableAutosave' => (bool) p1_setting( 'disable_autosave' ), 'blockEditor' => $screen->is_block_editor(),

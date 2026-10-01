@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-assets.mjs"
+  },
+  "devDependencies": {
+    "lightningcss": "1.33.0",
+    "terser": "5.51.2"
+  }
+}

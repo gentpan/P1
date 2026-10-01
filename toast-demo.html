@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="robots" content="noindex, nofollow">
 	<title>Toast 样式预览 · P1</title>
-	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="assets/main.css">
 	<style>
 		body { min-height: 100vh; background: var(--p1-page); color: var(--p1-text); }
 		.demo-shell { width: min(1100px, calc(100% - 2rem)); margin: 0 auto; padding: clamp(2rem, 5vw, 4rem) 0; }
@@ -74,7 +74,7 @@
 		<p class="demo-note">预览页只展示样式，不会真的提交评论、复制内容或修改点赞数。正式页面目前使用“简洁单行”风格。</p>
 	</main>
 	<div id="p1-toast-stack" class="p1-toast-stack" data-style="capsule" aria-live="polite" aria-atomic="false"></div>
-	<script src="assets/js/toast.js" defer></script>
+	<script src="assets/main.js" defer></script>
 	<script defer>
 		document.querySelectorAll('.demo-card [data-style]').forEach((button) => {
 			if (button.tagName !== 'BUTTON') return;
