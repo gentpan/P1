@@ -4023,15 +4023,6 @@ body[data-color-scheme="minimal"] .p1-c-comment-device-icon .p1-c-device-apple-d
 	text-align: center;
 }
 
-.footer-wordpress-icon {
-	display: block;
-	width: 16px;
-	height: 16px;
-	background: currentColor;
-	-webkit-mask: url("icons/wordpress-logo.svg") center / contain no-repeat;
-	mask: url("icons/wordpress-logo.svg") center / contain no-repeat;
-}
-
 /* WordPress utilities and block alignment. */
 .p1-archive-index {
 	min-width: 0;
