@@ -1675,9 +1675,8 @@ function p1_primary_menu_has_icons(): bool {
 
 /** Share the random-post control between the home header and article toolbar. */
 function p1_render_random_post_button( bool $in_header = false ): void {
-	$p1_random_sprite = get_theme_file_uri( 'assets/icons/fontawesome-used.svg' );
 	?>
-			<a class="quickbar-random-button<?php echo $in_header ? ' header-action-button' : ''; ?>" href="<?php echo esc_url( add_query_arg( 'p1_random_post', '1', home_url( '/' ) ) ); ?>" aria-label="<?php echo esc_attr( p1_theme_text( 'random_post', '随机文章' ) ); ?>" title="<?php echo esc_attr( p1_theme_text( 'random_post', '随机文章' ) ); ?>" rel="nofollow"><svg class="quickbar-dice-icon" aria-hidden="true" focusable="false"><use href="<?php echo esc_url( $p1_random_sprite . '#dice' ); ?>"></use></svg><svg class="quickbar-loading-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"></path></svg></a>
+			<a class="quickbar-random-button<?php echo $in_header ? ' header-action-button' : ''; ?>" href="<?php echo esc_url( add_query_arg( 'p1_random_post', '1', home_url( '/' ) ) ); ?>" aria-label="<?php echo esc_attr( p1_theme_text( 'random_post', '随机文章' ) ); ?>" title="<?php echo esc_attr( p1_theme_text( 'random_post', '随机文章' ) ); ?>" rel="nofollow"><i class="quickbar-dice-icon fa-solid fa-dice" aria-hidden="true"></i><i class="quickbar-loading-icon fa-solid fa-spinner" aria-hidden="true"></i></a>
 	<?php
 }
 

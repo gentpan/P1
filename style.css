@@ -458,22 +458,9 @@ th, td {
 	transform: scale(1.08);
 }
 
-.p1-quickbar svg {
-	width: 1.2rem;
-	height: 1.2rem;
-	fill: currentColor;
-}
-
-.p1-quickbar .quickbar-post-navigation svg {
-	transform-origin: center;
-}
-
-.quickbar-post-navigation--previous svg {
-	transform: rotate(-90deg);
-}
-
-.quickbar-post-navigation--next svg {
-	transform: rotate(90deg);
+.p1-quickbar a > i {
+	font-size: 1.2rem;
+	line-height: 1;
 }
 
 .quickbar-post-divider {
@@ -703,11 +690,9 @@ th, td {
 	transition: color 140ms ease, transform 140ms ease;
 }
 
-.header-action-button svg {
-	display: block;
-	width: 1.24rem;
-	height: 1.24rem;
-	fill: currentColor;
+.header-action-button > i {
+	font-size: 1.24rem;
+	line-height: 1;
 }
 
 .header-action-button:hover, .header-action-button:focus-visible {
@@ -1059,7 +1044,7 @@ body.p1-modal-open {
 
 .quickbar-random-button .quickbar-loading-icon {
 	display: none;
-	fill: var(--p1-accent);
+	color: var(--p1-accent);
 }
 
 .quickbar-random-button.is-loading .quickbar-dice-icon {
@@ -1070,8 +1055,7 @@ body.p1-modal-open {
 	display: block;
 }
 
-.quickbar-random-button.is-loading .quickbar-loading-icon path {
-	transform-origin: 12px 12px;
+.quickbar-random-button.is-loading .quickbar-loading-icon {
 	animation: p1-random-loading 0.75s linear infinite;
 }
 
@@ -1452,16 +1436,15 @@ body.p1-modal-open {
 	cursor: pointer;
 }
 
-.navigation-search-submit svg {
-	width: 1rem;
-	height: 1rem;
-	fill: currentColor;
+.navigation-search-submit i {
+	font-size: 1rem;
+	line-height: 1;
 	transition: transform 160ms ease;
 }
 
-.navigation-search-submit:hover svg,
-.navigation-search-submit:focus-visible svg,
-.navigation-search-submit:active svg { transform: scale(1.1); }
+.navigation-search-submit:hover i,
+.navigation-search-submit:focus-visible i,
+.navigation-search-submit:active i { transform: scale(1.1); }
 
 .primary-navigation li:hover > .sub-menu, .primary-navigation li:focus-within > .sub-menu {
 	display: flex;
@@ -4671,7 +4654,7 @@ body[data-color-scheme="minimal"] .p1-c-comment-device-icon .p1-c-device-apple-d
 	box-shadow: 0 3px 12px rgb(0 0 0 / 15%);
 	transition: color 160ms ease, transform 160ms ease;
 }
-.p1-back-to-top svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
+.p1-back-to-top i { font-size: 1.2rem; line-height: 1; }
 .p1-back-to-top:hover, .p1-back-to-top:focus-visible { color: var(--p1-icon-hover); transform: translateY(-2px); }
 .p1-back-to-top:focus-visible { outline: 2px solid var(--p1-accent); outline-offset: 3px; }
 
@@ -4685,7 +4668,7 @@ body[data-color-scheme="minimal"] .p1-c-comment-device-icon .p1-c-device-apple-d
 	min-height: 2.5rem;
 	padding: 0;
 }
-.site-header-tools .header-action-button svg { width: 22px; height: 22px; }
+.site-header-tools .header-action-button i { font-size: 22px; }
 .site-header-tools .header-menu .toggle { transform: scale(.55, .65); }
 .p1-back-to-top[hidden] { display: none; }
 
@@ -4701,7 +4684,7 @@ body[data-color-scheme="minimal"] .p1-c-comment-device-icon .p1-c-device-apple-d
 	.navigation-search-form { position: absolute; inset-block-start: 100%; inset-inline: 0; flex: none; width: 100%; min-width: 0; height: 48px; border: 0; border-block-start: 1px solid var(--p1-menu-divider-dark); border-radius: 0; background: linear-gradient(180deg, rgb(255 255 255 / 13%), rgb(0 0 0 / 7%)), var(--p1-accent); box-shadow: 0 4px 8px rgb(0 0 0 / 12%); }
 	.primary-navigation[data-mobile-search]:not(.is-search-open) .navigation-search-form { display: none; }
 	.primary-navigation[data-mobile-search] .navigation-search-toggle { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: var(--p1-menu-text); cursor: pointer; }
-	.navigation-search-toggle svg { width: 16px; height: 16px; fill: currentColor; }
+	.navigation-search-toggle i { font-size: 16px; line-height: 1; }
 	.navigation-search-toggle:is(:hover, :focus-visible, [aria-expanded="true"]) { background: rgb(var(--p1-menu-shade-rgb) / 18%); }
 	.navigation-search-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }
 	.navigation-search-input { font-size: 16px; }
