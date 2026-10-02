@@ -3664,6 +3664,32 @@ body[data-color-scheme="minimal"] .p1-c-comment-device-icon .p1-c-device-apple-d
 .p1-conversations .p1-comment-submit:is(:hover, :focus-visible) { width: calc(var(--p1-c-control) + 82px); background: var(--p1-accent); color: var(--p1-on-accent); }
 .p1-comment-submit:is(:hover, :focus-visible) .p1-c-submit-label { opacity: 1; }
 .p1-conversations .p1-comment-submit:disabled { cursor: wait; opacity: .5; }
+.p1-conversations .form-submit .p1-comment-submit.is-loading,
+.p1-conversations .form-submit .p1-comment-submit.is-loading:is(:hover, :focus-visible) {
+	display: grid;
+	place-items: center;
+	flex: 0 0 var(--p1-c-control);
+	width: var(--p1-c-control);
+	height: var(--p1-c-control);
+	border-radius: 50%;
+	background: var(--p1-accent);
+	color: var(--p1-on-accent);
+	opacity: 1;
+	cursor: progress;
+}
+.p1-comment-submit.is-loading > svg,
+.p1-comment-submit.is-loading .p1-c-submit-label { visibility: hidden; }
+.p1-comment-submit.is-loading::after {
+	content: "";
+	position: absolute;
+	width: 18px;
+	height: 18px;
+	border: 2px solid currentColor;
+	border-block-start-color: transparent;
+	border-radius: 50%;
+	animation: p1-comment-submit-spin .75s linear infinite;
+}
+@keyframes p1-comment-submit-spin { to { transform: rotate(360deg); } }
 .p1-conversations .comment-notes, .p1-conversations .must-log-in { color: var(--p1-muted); font-size: 11px; line-height: 1.8; }
 .p1-conversations .comment-notes { grid-row: 3; }
 .p1-conversations .p1-comment-error { grid-row: 4; }

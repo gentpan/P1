@@ -1760,9 +1760,13 @@ const p1RuntimeConfig = (() => {
 		request = controller;
 		form.dataset.p1Submitting = '1';
 		const submit = form.querySelector('[type="submit"]');
-		if (submit) submit.disabled = true;
+		if (submit) {
+			submit.disabled = true;
+			submit.classList.add('is-loading');
+			submit.setAttribute('aria-busy', 'true');
+			submit.setAttribute('aria-label', '正在提交评论');
+		}
 		form.querySelector('.p1-comment-error')?.remove();
-		const loading = startLoading();
 		try {
 			const publicIP = await window.p1PublicIP?.get();
 			if (controller.signal.aborted || id !== navigationId || !form.isConnected) return;
@@ -1787,11 +1791,16 @@ const p1RuntimeConfig = (() => {
 			message.setAttribute('role', 'alert');
 			message.textContent = error instanceof TypeError ? '评论提交失败，请检查网络后重试。' : error.message || '评论提交失败，请稍后重试。';
 			form.prepend(message);
+			window.p1Toast?.show(message.textContent, { type: 'error' });
 		} finally {
 			if (request === controller) request = null;
 			delete form.dataset.p1Submitting;
-			if (submit) submit.disabled = false;
-			stopLoading(loading);
+			if (submit) {
+				submit.disabled = false;
+				submit.classList.remove('is-loading');
+				submit.removeAttribute('aria-busy');
+				submit.setAttribute('aria-label', '提交评论');
+			}
 		}
 	}
 
